@@ -10,14 +10,17 @@ prepare:
 	mkdir -p /etc/sddm.conf.d/
 
 install: clean prepare
-	@install -D $(SRC)/hyprland.conf $(PREFIX)/share/hypr/sddm/hyprland.conf && echo "[Installed] $(PREFIX)/share/hypr/sddm/hyprland.conf" 
+	@install -D $(SRC)/hyprland.conf $(PREFIX)/share/hypr/sddm/hyprland.conf && echo "[Installed] $(PREFIX)/share/hypr/sddm/hyprland.conf"
 	@install -D $(SRC)/sddm-hyprland.conf /etc/sddm.conf.d/sddm-hyprland.conf && echo "[Installed] /etc/sddm.conf.d/sddm-hyprland.conf"
-	@sed -i 's|CompositorCommand=.*|CompositorCommand=Hyprland -c $(PREFIX)/share/hypr/sddm/hyprland.conf|' /etc/sddm.conf.d/sddm-hyprland.conf &&	echo "[default sddm conf] $(PREFIX)/share/hypr/sddm/hyprland.conf" 
+	@sed -i 's|CompositorCommand=.*|CompositorCommand=hyprland --config $(PREFIX)/share/hypr/sddm/hyprland.conf|' /etc/sddm.conf.d/sddm-hyprland.conf && echo "[default sddm conf] $(PREFIX)/share/hypr/sddm/hyprland.conf"
 
+verify:
+	@echo "=== CompositorCommand in /etc/sddm.conf.d/sddm-hyprland.conf ==="
+	@grep CompositorCommand /etc/sddm.conf.d/sddm-hyprland.conf
 
 clean:
 	@rm -rf $(PREFIX)/share/hypr/sddm && echo "[cleaned] $(PREFIX)/share/hypr/sddm"
 	@rm -rf $(PREFIX)/share/hyde/sddm && echo "[cleaned] $(PREFIX)/share/hyde/sddm"
-	@rm -rf /etc/sddm.conf.d/sddm-hyprland.conf	&& echo "[cleaned] /etc/sddm.conf.d/sddm-hyprland.conf"
+	@rm -rf /etc/sddm.conf.d/sddm-hyprland.conf && echo "[cleaned] /etc/sddm.conf.d/sddm-hyprland.conf"
 
-.PHONY: all install prepare
+.PHONY: all install prepare clean verify
